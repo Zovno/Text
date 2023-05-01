@@ -147,27 +147,27 @@ Word* findWordInList(Word* head, const char* word) {
     Word* current = head;
     while (current != NULL) {
         if (strcmp(current->value, word) == 0) {
-            return current;  // Слово найдено
+            return current;  
         }
         current = current->next;
     }
 
-    return NULL;  // Слово не найдено
+    return NULL;  
 }
 
 Word* countWordOccurrences(const Word* head) {
     if (head == NULL) {
-        return NULL; // Список пустой
+        return NULL; 
     }
-    Word* occurrencesList = NULL;  // Список вхождений слов
-    const Word* current = head;    // Указатель на текущий элемент
+    Word* occurrencesList = NULL; 
+    const Word* current = head;  
 
     while (current != NULL) {
         const char* word = current->value;
         Word* node = findWordInList(occurrencesList, word);
 
         if (node != NULL) {
-            node->count++;  // Увеличиваем счетчик вхождений
+            node->count++; 
         }
         else {
             Word* newNode = createNode(word);
@@ -176,7 +176,7 @@ Word* countWordOccurrences(const Word* head) {
             occurrencesList = newNode;
         }
 
-        current = current->next;  // Переходим к следующему элементу
+        current = current->next; 
     }
 
     return occurrencesList;
