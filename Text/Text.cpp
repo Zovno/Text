@@ -7,14 +7,17 @@
 
 typedef struct Word {
     char* value;
+    int count;
+    int length;
     struct Word* next;
 } Word;
 
 
-Word* createNode(char* value) {
+Word* createNode(const char* word) {
     Word* newNode = (Word*)malloc(sizeof(Word));
     if (newNode != NULL) {
-        newNode->value = _strdup(value);
+        newNode->value = _strdup(word);
+        newNode->count = 0;
         newNode->next = NULL;
     }
     return newNode;
@@ -23,9 +26,9 @@ Word* createNode(char* value) {
 
 void pushWord(Word** head, const char* word) {
     Word* newNode = (Word*)malloc(sizeof(Word));
-    newNode->value = _strdup(word);  
+    newNode->value = _strdup(word);
+    newNode->length = strlen(word);
     newNode->next = NULL;
-
     if (*head == NULL) {
         *head = newNode;
     }
@@ -37,6 +40,7 @@ void pushWord(Word** head, const char* word) {
         current->next = newNode;
     }
 }
+
 Word* loadWordsFromFile(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -139,6 +143,52 @@ Word* sortListByLength( Word* head) {
     return sortedList;
 }
 
+Word* findWordInList(Word* head, const char* word) {
+    Word* current = head;
+    while (current != NULL) {
+        if (strcmp(current->value, word) == 0) {
+            return current;  // Слово найдено
+        }
+        current = current->next;
+    }
+
+    return NULL;  // Слово не найдено
+}
+
+Word* countWordOccurrences(const Word* head) {
+    if (head == NULL) {
+        return NULL; // Список пустой
+    }
+    Word* occurrencesList = NULL;  // Список вхождений слов
+    const Word* current = head;    // Указатель на текущий элемент
+
+    while (current != NULL) {
+        const char* word = current->value;
+        Word* node = findWordInList(occurrencesList, word);
+
+        if (node != NULL) {
+            node->count++;  // Увеличиваем счетчик вхождений
+        }
+        else {
+            Word* newNode = createNode(word);
+            newNode->count = 1;
+            newNode->next = occurrencesList;
+            occurrencesList = newNode;
+        }
+
+        current = current->next;  // Переходим к следующему элементу
+    }
+
+    return occurrencesList;
+}
+
+void displayWordOccurrences(const Word* head) {
+    const Word* current = head;
+    while (current != NULL) {
+        printf("Word: %s, Count: %d, Length: %lu\n", current->value, current->count, strlen(current->value));
+        current = current->next;
+    }
+}
 
 int main() {
 
@@ -148,11 +198,16 @@ int main() {
 
     displayList(head);
 
-    Word* head2 = sortListByLength(head);
+    //Word* head2 = sortListByLength(head);
+    
+    Word* head3 = countWordOccurrences(head);
+    
+    //displayList(head2);
 
-    displayList(head2);
+    displayWordOccurrences(head3);
 
-    freeList(head2);
+    freeList(head3);
+    //freeList(head2);
     freeList(head);
 
     return 0;
