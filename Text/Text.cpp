@@ -268,18 +268,22 @@ void printWordPairs(const Pair* pairs, int count) {
 }
 
 
-void swapWordsInPair(Word* head, const Pair* pair) {
+void swapWordsInPair(Word* head, const Pair* pair, int count) {
     if (head == NULL || pair == NULL) {
         return;
     }
 
     Word* current = head;
-    while (current != NULL) {
-        if (strcmp(current->value, pair->A) == 0) {
-            current->value = _strdup(pair->B);
-        }
-        else if (strcmp(current->value, pair->B) == 0) {
-            current->value = _strdup(pair->A);
+    while (current != NULL) 
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (strcmp(current->value, pair[i].A) == 0) {
+                current->value = _strdup(pair[i].B);
+            }
+            else if (strcmp(current->value, pair[i].B) == 0) {
+                current->value = _strdup(pair[i].A);
+            }
         }
         current = current->next;
     }
@@ -330,9 +334,9 @@ int main() {
     Pair* pairs = findWordPair(head3, count);
 
     printWordPairs(pairs, *count);
-    swapWordsInPair(head, pairs);
+    swapWordsInPair(head, pairs, *count);
     writeListToFile(head, "D:\\txt1.txt");
-    swapWordsInPair(head, pairs);
+    swapWordsInPair(head, pairs, *count);
     writeListToFile(head, "D:\\txt2.txt");
     free(pairs);
     free(count);
